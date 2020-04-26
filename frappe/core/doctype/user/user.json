@@ -1,4 +1,5 @@
 {
+ "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
  "creation": "2014-03-11 14:55:00",
@@ -76,7 +77,8 @@
   "api_key",
   "generate_keys",
   "column_break_65",
-  "api_secret"
+  "api_secret",
+  "type"
  ],
  "fields": [
   {
@@ -580,13 +582,20 @@
    "fieldtype": "Password",
    "label": "API Secret",
    "read_only": 1
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "label": "Type",
+   "options": "Brand\nFabric Supplier\nTrimming Supplier\nPackaging Supplier\nFactory"
   }
  ],
  "icon": "fa fa-user",
  "idx": 413,
  "image_field": "user_image",
+ "links": [],
  "max_attachments": 5,
- "modified": "2019-10-22 14:16:34.810223",
+ "modified": "2020-04-26 17:06:52.619808",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",
