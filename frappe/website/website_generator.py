@@ -75,6 +75,8 @@ class WebsiteGenerator(Document):
 		clear_cache(self.route)
 
 	def scrub(self, text):
+		if(text==None):
+			return ''
 		return cleanup_page_name(text).replace('_', '-')
 
 	def get_parents(self, context):
