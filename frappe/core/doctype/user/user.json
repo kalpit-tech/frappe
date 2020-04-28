@@ -78,7 +78,8 @@
   "generate_keys",
   "column_break_65",
   "api_secret",
-  "type"
+  "type",
+  "paid"
  ],
  "fields": [
   {
@@ -588,6 +589,12 @@
    "fieldtype": "Select",
    "label": "Type",
    "options": "brand\nclient\nfabric_supplier\ntrimming_supplier\npackaging_supplier\nfactory"
+  },
+  {
+   "fieldname": "paid",
+   "fieldtype": "Select",
+   "label": "Subscription Paid",
+   "options": "0\n1"
   }
  ],
  "icon": "fa fa-user",
@@ -595,7 +602,7 @@
  "image_field": "user_image",
  "links": [],
  "max_attachments": 5,
- "modified": "2020-04-28 18:49:35.393033",
+ "modified": "2020-04-28 19:18:31.031082",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",
