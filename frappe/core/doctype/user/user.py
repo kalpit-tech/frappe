@@ -745,7 +745,7 @@ def verify_password(password):
 	frappe.local.login_manager.check_password(frappe.session.user, password)
 
 @frappe.whitelist(allow_guest=True)
-def sign_up(email, full_name, redirect_to):
+def sign_up(email, full_name, pwd, user_type, redirect_to):
 	if not is_signup_enabled():
 		frappe.throw(_('Sign Up is disabled'), title='Not Allowed')
 
@@ -769,7 +769,8 @@ def sign_up(email, full_name, redirect_to):
 			"email": email,
 			"first_name": full_name,
 			"enabled": 1,
-			"new_password": random_string(10),
+			"new_password": pwd, #random_string(10),
+			"type": user_type,
 			"user_type": "Website User"
 		})
 		user.flags.ignore_permissions = True
@@ -780,6 +781,19 @@ def sign_up(email, full_name, redirect_to):
 		default_role = frappe.db.get_value("Portal Settings", None, "default_role")
 		if default_role:
 			user.add_roles(default_role)
+
+		if user_type=='brand':
+			user.add_roles('Brand User')
+		elif user_type=='client':
+			user.add_roles('Brand User')
+		elif user_type=='fabric_supplier':
+			user.add_roles('Fabric Vendor')
+		elif user_type=='trimming_supplier':
+			user.add_roles('Trimming Vendor')
+		elif user_type=='packaging_supplier':
+			user.add_roles('Packaging Vendor')
+		elif user_type=='factory':
+			user.add_roles('Manufacturing User')
 
 		if redirect_to:
 			frappe.cache().hset('redirect_after_login', user.name, redirect_to)

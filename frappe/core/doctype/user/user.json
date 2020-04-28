@@ -587,7 +587,7 @@
    "fieldname": "type",
    "fieldtype": "Select",
    "label": "Type",
-   "options": "Brand\nFabric Supplier\nTrimming Supplier\nPackaging Supplier\nFactory"
+   "options": "brand\nclient\nfabric_supplier\ntrimming_supplier\npackaging_supplier\nfactory"
   }
  ],
  "icon": "fa fa-user",
@@ -595,7 +595,7 @@
  "image_field": "user_image",
  "links": [],
  "max_attachments": 5,
- "modified": "2020-04-26 17:06:52.619808",
+ "modified": "2020-04-28 18:49:35.393033",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",

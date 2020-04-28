@@ -33,6 +33,8 @@ login.bind_events = function() {
 		var args = {};
 		args.cmd = "frappe.core.doctype.user.user.sign_up";
 		args.email = ($("#signup_email").val() || "").trim();
+		args.pwd = $("#signup_password").val();
+		args.user_type = $('#user-type').val();
 		args.redirect_to = frappe.utils.get_url_arg("redirect-to") || '';
 		args.full_name = ($("#signup_fullname").val() || "").trim();
 		if(!args.email || !validate_email(args.email) || !args.full_name) {
