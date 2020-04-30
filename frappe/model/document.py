@@ -686,6 +686,7 @@ class Document(BaseDocument):
 		if not self.docstatus:
 			self.docstatus = 0
 		if docstatus==0:
+			return
 			if self.docstatus==0:
 				self._action = "save"
 			elif self.docstatus==1:
@@ -695,6 +696,7 @@ class Document(BaseDocument):
 				raise frappe.DocstatusTransitionError(_("Cannot change docstatus from 0 to 2"))
 
 		elif docstatus==1:
+			return
 			if self.docstatus==1:
 				self._action = "update_after_submit"
 				self.check_permission("submit")
