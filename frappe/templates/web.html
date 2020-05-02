@@ -19,25 +19,27 @@
 				<div class="page-body">
 					<div class="container-expand">
 						{%endif%}
-						<!-- breadcrumbs -->
-						<div class="page-breadcrumbs">
-							{% block breadcrumbs %}
-							{% include 'templates/includes/breadcrumbs.html' %}
-							{% endblock %}
-						</div>
-						{# original content #}
-						<div class="d-flex justify-content-between align-items-center">
-							<div class="page-header">
-								{% block header %}{% endblock %}
+						<div class="container">
+							<!-- breadcrumbs -->
+							<div class="page-breadcrumbs">
+								{% block breadcrumbs %}
+								{% include 'templates/includes/breadcrumbs.html' %}
+								{% endblock %}
 							</div>
+							{# original content #}
+							<div class="d-flex justify-content-between align-items-center">
+								<div class="page-header">
+									{% block header %}{% endblock %}
+								</div>
 
-							{% if self.header_actions() %}
-							<div class="page-header-actions-block">
-								{% block header_actions %}{% endblock %}
+								{% if self.header_actions() %}
+								<div class="page-header-actions-block">
+									{% block header_actions %}{% endblock %}
+								</div>
+								{% endif %}
 							</div>
-							{% endif %}
+							{%- block page_content -%}{%- endblock -%}
 						</div>
-						{%- block page_content -%}{%- endblock -%}
 						{# original content #}
 						{% if'Brand User' in roles %}
 					</div>
