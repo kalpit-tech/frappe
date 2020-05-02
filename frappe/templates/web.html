@@ -5,12 +5,6 @@
 
 {% macro main_content() %}
 <div class="page-content-wrapper">
-	<!-- breadcrumbs -->
-	<div class="page-breadcrumbs">
-		{% block breadcrumbs %}
-		{% include 'templates/includes/breadcrumbs.html' %}
-		{% endblock %}
-	</div>
 
 	{% block page_container %}
 	<main class="container my-5">
@@ -25,6 +19,12 @@
 				<div class="page-body">
 					<div class="container-expand">
 						{%endif%}
+						<!-- breadcrumbs -->
+						<div class="page-breadcrumbs">
+							{% block breadcrumbs %}
+							{% include 'templates/includes/breadcrumbs.html' %}
+							{% endblock %}
+						</div>
 						{# original content #}
 						<div class="d-flex justify-content-between align-items-center">
 							<div class="page-header">
@@ -82,12 +82,12 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 {% macro breadcrumb(items,class,id,typetwo) %}
 <ol class="breadcrumb" itemscope="" itemtype="http://schema.org/BreadcrumbList">
 
-    {% for i in items %}
-    <li class="breadcrumb-item">
-        <a href="{{i.url}}" itemprop="url">
-            {{i.label}}
-        </a>
-    </li>
-    {% endfor %}
+	{% for i in items %}
+	<li class="breadcrumb-item">
+		<a href="{{i.url}}" itemprop="url">
+			{{i.label}}
+		</a>
+	</li>
+	{% endfor %}
 </ol>
 {% endmacro %}
