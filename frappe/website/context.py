@@ -31,6 +31,7 @@ def get_context(path, args=None):
 	if hasattr(frappe.local, 'response') and frappe.local.response.get('context'):
 		context.update(frappe.local.response.context)
 
+	context.roles = frappe.get_roles(frappe.session.user)
 	return context
 
 def update_controller_context(context, controller):
