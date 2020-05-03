@@ -570,7 +570,7 @@ def get_link_options(web_form_name, doctype, allow_read_on_all_link_options=Fals
 			doctype_validated = True
 
 			permissions = frappe.permissions.get_role_permissions(frappe.get_meta(doctype))
-			if not allow_read_on_all_link_options and len(permissions.if_owner)>0:
+			if not allow_read_on_all_link_options and ('if_owner' in permissions) and len(permissions.if_owner)>0:
 				limited_to_user   = True
 
 	else:
