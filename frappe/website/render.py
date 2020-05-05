@@ -209,7 +209,40 @@ def build_page(path):
 		page_cache[frappe.local.lang] = html
 		frappe.cache().hset("website_page", path, page_cache)
 
+	if path=='shipment-order':
+		html=add_top_menu(html)
+		
 	return html
+
+
+def add_top_menu(html):
+	new_content = """<div class="col-12">
+		<ul class="page-links ">
+			<li><a href="#" class="active">Order</a></li>
+			<li><a href="/shipping-list">List</a></li>
+			<!-- <li><a href="#">Manage</a></li> -->
+		</ul>
+	</div>"""
+
+	start_tag = '<div class="d-flex justify-content-between align-items-center">'
+	position = find_str(html, start_tag)
+	html = html[:position]+new_content+html[position:-1]
+	return html
+
+
+def find_str(s, char):
+    index = 0
+
+    if char in s:
+        c = char[0]
+        for ch in s:
+            if ch == c:
+                if s[index:index+len(char)] == char:
+                    return index
+
+            index += 1
+
+    return -1
 
 def resolve_path(path):
 	if not path:
