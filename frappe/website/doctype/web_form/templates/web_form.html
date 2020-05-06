@@ -24,6 +24,11 @@
 data-web-form="{{ name }}" data-web-form-doctype="{{ doc_type }}" data-login-required="{{ frappe.utils.cint(login_required and frappe.session.user=='Guest') }}" data-is-list="{{ frappe.utils.cint(is_list) }}" data-allow-delete="{{ allow_delete }}"
 {% endmacro %}
 
+{%block wrapper_div%}
+<div class="d-flex justify-content-between align-items-center">
+{%endblock%}
+{%block end_wrapper_div%}</div>{%endblock%}
+
 {% block page_content %}
 <div>
 	{% if is_list %}

@@ -27,17 +27,18 @@
 								{% endblock %}
 							</div>
 							{# original content #}
-							{# <div class="d-flex justify-content-between align-items-center"> #}
-								<div class="page-header">
-									{% block header %}{% endblock %}
-								</div>
+							{%block wrapper_div%}{%endblock%}
+							
+							<div class="page-header">
+								{% block header %}{% endblock %}
+							</div>
 
-								{% if self.header_actions() %}
-								<div class="page-header-actions-block">
-									{% block header_actions %}{% endblock %}
-								</div>
-								{% endif %}
-							{# </div> #}
+							{% if self.header_actions() %}
+							<div class="page-header-actions-block ml-auto">
+								{% block header_actions %}{% endblock %}
+							</div>
+							{% endif %}
+							{% block end_wrapper_div%}{%endblock%}
 							{%- block page_content -%}{%- endblock -%}
 						</div>
 						{# original content #}
