@@ -41,15 +41,19 @@ data-web-form="{{ name }}" data-web-form-doctype="{{ doc_type }}" data-login-req
 		</div>
 	</div>
 	<div class="list-view-footer text-right"></div>
-	{% else %}
+	{% else%}
 	{# web form #}
 	<div role="form">
 		<div id="introduction" class="text-muted"></div>
 		{# <hr> #}
-		<div class="card mb-5">
-			<div class="card-body">
-				<div class="web-form-wrapper" {{ container_attributes() }}></div>
-				<div class="web-form-footer pull-right"></div>
+		<div class="row">
+			<div class="col-lg-6">
+				<div class="card mb-5">
+					<div class="card-body">
+						<div class="web-form-wrapper" {{ container_attributes() }}></div>
+						<div class="web-form-footer pull-right"></div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
