@@ -154,7 +154,7 @@ export default class WebFormList {
 		th.appendChild(checkbox);
 		row.appendChild(th);
 
-		add_heading(row, __("Sr"));
+		add_heading(row, __("Number"));
 		this.columns.forEach(col => {
 			add_heading(row, __(col.label));
 		});

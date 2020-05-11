@@ -211,9 +211,7 @@ def build_page(path):
 
 	if path=='shipment-order':
 		html=add_top_menu(html)
-		
-	if 'Home - ' in html and context.page_or_generator == 'Generator':
-		html = html.replace('Home - ','')
+
 	return html
 
 

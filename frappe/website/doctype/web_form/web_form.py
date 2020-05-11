@@ -552,12 +552,20 @@ def get_in_list_view_fields(doctype):
 
 	fields += [df.fieldname for df in meta.fields if df.in_list_view and df.fieldname not in fields]
 
-	def get_field_df(fieldname):
+	def get_field_df(fieldname):			
 		if fieldname == 'name':
 			return { 'label': 'Name', 'fieldname': 'name', 'fieldtype': 'Data' }
 		return meta.get_field(fieldname).as_dict()
 
-	return [get_field_df(f) for f in fields]
+	fieldslist = []
+	# add docname to following list to hide name column in data list
+	docnames = ['Composition','Packaging Size','Trimming Size']
+	for f in fields:
+		if meta.name in docnames  and f == 'name':
+			continue
+		fieldslist.append(get_field_df(f))
+	return fieldslist
+	# return [get_field_df(f) for f in fields]
 
 @frappe.whitelist(allow_guest=True)
 def get_link_options(web_form_name, doctype, allow_read_on_all_link_options=False):
