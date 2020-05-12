@@ -154,7 +154,8 @@ export default class WebFormList {
 		th.appendChild(checkbox);
 		row.appendChild(th);
 
-		add_heading(row, __("Number"));
+		// add Serial Number (SR) column
+		// add_heading(row, __("Number"));
 		this.columns.forEach(col => {
 			add_heading(row, __(col.label));
 		});
@@ -300,9 +301,9 @@ frappe.ui.WebFormListRow = class WebFormListRow {
 
 		cell.appendChild(this.checkbox);
 
-		// Add Serial Number
-		let serialNo = this.row.insertCell();
-		serialNo.innerText = this.serial_number;
+		// Add Serial Number - SR column
+		// let serialNo = this.row.insertCell();
+		// serialNo.innerText = this.serial_number;
 
 		this.columns.forEach(field => {
 			let cell = this.row.insertCell();

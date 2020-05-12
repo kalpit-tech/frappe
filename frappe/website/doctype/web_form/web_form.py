@@ -559,7 +559,7 @@ def get_in_list_view_fields(doctype):
 
 	fieldslist = []
 	# add docname to following list to hide name column in data list
-	docnames = ['Composition','Packaging Size','Trimming Size']
+	docnames = ['Composition','Packaging Size','Trimming Size','Garment Label']
 	for f in fields:
 		if meta.name in docnames  and f == 'name':
 			continue
