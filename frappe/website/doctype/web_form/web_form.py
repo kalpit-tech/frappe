@@ -437,9 +437,9 @@ def inject_brand(doc):
 		doc.brand_name = frappe.get_value('User', frappe.session.user, 'brand_name')
 	elif 'Customer' in roles:
 		try:
-			doc.client_name = frappe.get_all('Customer', filters={'user': frappe.session.user})[0].name
+			doc.client_name = frappe.get_all('Customer', filters={'email_address': frappe.session.user})[0].name
 		except:
-			frappe.throw(frappe._("Error"))
+			frappe.throw(frappe._("Customer with email not exists in database"))
 		
 	return doc
 
