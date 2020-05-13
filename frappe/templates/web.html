@@ -12,7 +12,8 @@
 
 		{% if'Brand User' in roles %}
 		<div class="page_content">
-			<div class="page-with-sidebar">
+			{% set rightMenuPages = ['fabric-summary', 'trimming-summary', 'packaging-summary'] %}
+			<div class="page-with-sidebar{% if path in rightMenuPages %} right-sidebar{% endif %}">
 				<div class="sidebar">
 					{% include 'erpnext/templates/sidenav.html' %}
 				</div>
