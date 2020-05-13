@@ -388,6 +388,7 @@ def accept(web_form, data, docname=None, for_payment=False):
 
 		ignore_mandatory = True# if files else False
 
+		doc = inject_brand(doc)
 		doc.insert(ignore_permissions = True, ignore_mandatory = ignore_mandatory)
 
 	# add files
@@ -427,6 +428,20 @@ def accept(web_form, data, docname=None, for_payment=False):
 		return web_form.get_payment_gateway_url(doc)
 	else:
 		return doc
+
+
+def inject_brand(doc):
+	roles = frappe.get_roles(frappe.session.user)
+	if 'Brand User' in roles:
+		doc.brand = frappe.get_value('User', frappe.session.user, 'brand_name')
+		doc.brand_name = frappe.get_value('User', frappe.session.user, 'brand_name')
+	elif 'Customer' in roles:
+		try:
+			doc.client_name = frappe.get_all('Customer', filters={'user': frappe.session.user})[0].name
+		except:
+			frappe.throw(frappe._("Error"))
+		
+	return doc
 
 @frappe.whitelist()
 def delete(web_form_name, docname):
