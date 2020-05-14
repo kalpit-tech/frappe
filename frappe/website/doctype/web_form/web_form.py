@@ -478,9 +478,13 @@ def delete_multiple(web_form_name, docnames):
 
 
 def has_web_form_permission(doctype, name, ptype='read'):
+	# checking permission for loading web_form
+	permissions = frappe.permissions.get_role_permissions(frappe.get_meta(doctype))
 	if frappe.session.user=="Guest":
 		return False
 
+	elif len(permissions.if_owner)==0:
+		return True
 	# owner matches
 	elif frappe.db.get_value(doctype, name, "owner")==frappe.session.user:
 		return True
