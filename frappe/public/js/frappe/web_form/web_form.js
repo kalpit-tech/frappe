@@ -55,7 +55,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		intro_wrapper.innerHTML = intro;
 	}
 
-	add_button(name, type, action, wrapper_class=".web-form-actions") {
+	add_button(name, type, action, wrapper_class = ".web-form-actions") {
 		const button = document.createElement("button");
 		button.classList.add("btn", "btn-" + type, "btn-sm", "ml-2");
 		button.innerHTML = name;
@@ -136,7 +136,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 					frappe.web_form.events.trigger('after_save');
 				}
 			},
-			always: function() {
+			always: function () {
 				window.saving = false;
 			}
 		});
@@ -150,6 +150,24 @@ export default class WebForm extends frappe.ui.FieldGroup {
 			args: {
 				web_form_name: this.name,
 				docname: this.doc.name
+			},
+			callback: response => {
+				if (!response.exc) {
+					// frappe.msgprint(__(""))
+					const success_dialog = new frappe.ui.Dialog({
+						title: __("Deleted Successfully"),
+						secondary_action: () => {
+							if (this.success_url) {
+								window.location.pathname = this.success_url;
+							} else if (this.login_required) {
+								window.location.href =
+									window.location.pathname + "?name=" + data.name;
+							}
+						}
+					});
+
+					success_dialog.show();
+				}
 			}
 		});
 	}
@@ -175,7 +193,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 			secondary_action: () => {
 				if (this.success_url) {
 					window.location.pathname = this.success_url;
-				} else if(this.login_required) {
+				} else if (this.login_required) {
 					window.location.href =
 						window.location.pathname + "?name=" + data.name;
 				}
