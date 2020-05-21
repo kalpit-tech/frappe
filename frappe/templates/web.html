@@ -14,11 +14,9 @@
 		<div class="page_content">
 			{% set rightMenuPages = ['fabric-summary', 'trimming-summary', 'packaging-summary'] %}
 			<div class="page-with-sidebar{% if path in rightMenuPages %} right-sidebar{% endif %}">
-				{% if path not in rightMenuPages%}
 				<div class="sidebar">
 					{% include 'erpnext/templates/sidenav.html' %}
 				</div>
-				{%endif%}
 				<div class="page-body">
 					<div class="container-expand">
 						{%endif%}
