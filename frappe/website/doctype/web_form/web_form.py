@@ -483,7 +483,7 @@ def has_web_form_permission(doctype, name, ptype='read'):
 	if frappe.session.user=="Guest":
 		return False
 
-	elif len(permissions.if_owner)==0:
+	elif ('if_owner' in permissions) and len(permissions.if_owner)==0:
 		return True
 	# owner matches
 	elif frappe.db.get_value(doctype, name, "owner")==frappe.session.user:
