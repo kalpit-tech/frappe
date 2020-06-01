@@ -12,7 +12,7 @@
 
 		{% if'Brand User' in roles or 'Fabric Vendor' in roles or 'Trimming Vendor' in roles or 'Packaging Vendor' in roles%}
 		<div class="page_content">
-			{% set rightMenuPages = ['fabric-summary', 'trimming-summary', 'packaging-summary'] %}
+			{% set rightMenuPages = ['fabric-summary', 'trimming-summary', 'packaging-summary','production-summary','prototype-summary'] %}
 			<div class="page-with-sidebar{% if path in rightMenuPages %} right-sidebar{% endif %}">
 				{% if 'Brand User' in roles %}
 				<div class="sidebar">
@@ -31,7 +31,7 @@
 							</div>
 							{# original content #}
 							{%block wrapper_div%}{%endblock%}
-							
+
 							<div class="page-header">
 								{% block header %}{% endblock %}
 							</div>
