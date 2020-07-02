@@ -79,7 +79,14 @@
   "column_break_65",
   "api_secret",
   "type",
-  "paid"
+  "paid",
+  "contact",
+  "address1",
+  "address2",
+  "city",
+  "zip_code",
+  "country",
+  "tax_id"
  ],
  "fields": [
   {
@@ -595,6 +602,42 @@
    "fieldtype": "Select",
    "label": "Subscription Paid",
    "options": "0\n1"
+  },
+  {
+   "fieldname": "contact",
+   "fieldtype": "Data",
+   "label": "Contact"
+  },
+  {
+   "fieldname": "address1",
+   "fieldtype": "Data",
+   "label": "Address Line 1"
+  },
+  {
+   "fieldname": "address2",
+   "fieldtype": "Data",
+   "label": "Address Line 2"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "label": "City"
+  },
+  {
+   "fieldname": "zip_code",
+   "fieldtype": "Data",
+   "label": "Zip Code"
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "label": "Country",
+   "options": "Country"
+  },
+  {
+   "fieldname": "tax_id",
+   "fieldtype": "Data",
+   "label": "Tax ID"
   }
  ],
  "icon": "fa fa-user",
@@ -602,7 +645,7 @@
  "image_field": "user_image",
  "links": [],
  "max_attachments": 5,
- "modified": "2020-04-28 19:18:31.031082",
+ "modified": "2020-07-02 09:55:12.316936",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",
