@@ -4189,3 +4189,7 @@ DocType: DocField,Ignore User Permissions,Ignorer les Autorisations des Utilisat
 apps/frappe/frappe/public/js/frappe/web_form/web_form.js,Saved Successfully,Enregistré avec succès
 apps/frappe/frappe/core/doctype/user/user.py,Please ask your administrator to verify your sign-up,Veuillez demander à votre administrateur de vérifier votre inscription
 DocType: Domain Settings,Active Domains,Domaines Actifs
+DocType: Fabric,Fabric Way,Sens du tissu
+DocType: Fabric,Warp,Sens trame
+DocType: Fabric,Weft,Sens chaîne
+DocType: Fabric,Bias,Biais
