@@ -7,7 +7,6 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "sb0_5",
   "enabled",
   "section_break_3",
   "email",
@@ -15,6 +14,7 @@
   "middle_name",
   "last_name",
   "full_name",
+  "type",
   "send_welcome_email",
   "unsubscribed",
   "column_break0",
@@ -78,7 +78,6 @@
   "generate_keys",
   "column_break_65",
   "api_secret",
-  "type",
   "paid",
   "contact",
   "address1",
@@ -86,7 +85,8 @@
   "city",
   "zip_code",
   "country",
-  "tax_id"
+  "tax_id",
+  "sb0_5"
  ],
  "fields": [
   {
@@ -645,7 +645,7 @@
  "image_field": "user_image",
  "links": [],
  "max_attachments": 5,
- "modified": "2020-07-02 09:55:12.316936",
+ "modified": "2020-07-26 18:51:38.982080",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",

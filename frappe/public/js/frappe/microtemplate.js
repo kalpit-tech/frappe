@@ -155,6 +155,7 @@ frappe.render_pdf = function(html, opts = {}) {
 			var blob = new Blob([success.currentTarget.response], {type: "application/pdf"});
 			var objectUrl = URL.createObjectURL(blob);
 
+			
 			//Open report in a new window
 			window.open(objectUrl);
 		}
