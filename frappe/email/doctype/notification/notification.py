@@ -13,7 +13,7 @@ from frappe.utils.jinja import validate_template
 from frappe.modules.utils import export_module_json, get_doc_module
 from six import string_types
 from frappe.integrations.doctype.slack_webhook_url.slack_webhook_url import send_slack_message
-
+from email.utils import formataddr
 class Notification(Document):
 	def onload(self):
 		'''load message'''
@@ -328,3 +328,17 @@ def evaluate_alert(doc, alert, event):
 
 def get_context(doc):
 	return {"doc": doc, "nowdate": nowdate, "frappe.utils": frappe.utils}
+
+def sendCustomEmail(templateData):
+    
+	subject=frappe.render_template(templateData['notification'].subject,templateData) 
+	sender=formataddr((templateData['notification'].sender, templateData['notification'].sender_email))
+	body= frappe.render_template(templateData['notification'].message,templateData)
+
+	frappe.sendmail(recipients = templateData['recipient'],
+			subject = subject,
+			sender = sender,
+			message = body,
+			expose_recipients="header")
+	
+    	
