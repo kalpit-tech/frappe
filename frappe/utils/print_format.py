@@ -96,7 +96,10 @@ def download_pdf(doctype, name, format=None, doc=None, no_letterhead=0):
 def report_to_pdf(html, orientation="Landscape"):
 	make_access_log(file_type='PDF', method='PDF', page=html)
 	frappe.local.response.filename = "report.pdf"
+	frappe.logger().info("Plaiddddddddddddddddddddddddddddddd")
 	frappe.local.response.filecontent = get_pdf(html, {"orientation": orientation})
+	frappe.logger().debug('Custommmmmmmmmmmmmmmmmmmmmmmmmmm')
+	frappe.logger().info("Plaidddddddddddddd")
 	frappe.local.response.type = "pdf"
 
 @frappe.whitelist()

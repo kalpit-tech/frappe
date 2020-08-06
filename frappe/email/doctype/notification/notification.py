@@ -334,7 +334,7 @@ def sendCustomEmail(templateData):
 	subject=frappe.render_template(templateData['notification'].subject,templateData) 
 	sender=formataddr((templateData['notification'].sender, templateData['notification'].sender_email))
 	body= frappe.render_template(templateData['notification'].message,templateData)
-
+	print('emailllllllllllllllllllllllllllllll')
 	frappe.sendmail(recipients = templateData['recipient'],
 			subject = subject,
 			sender = sender,
