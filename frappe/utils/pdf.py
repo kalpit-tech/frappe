@@ -25,7 +25,7 @@ def getBase64Img(file):
     
 
     path_prefix = "/opt/bench/mode-hero-erp/sites/modehero.com/public"
-    # /opt/bench/mode-hero-erp/sites
+    # /opt/bench/mode-hero-erp/sites/modehero.com/public
     # "/home/dhananjana/python_project/modehero/sites/modehero.com/public"
 
     fp = path_prefix+str(file)
@@ -39,6 +39,7 @@ def getBase64Img(file):
 def get_pdf(html, options=None, output=None):
     html = scrub_urls(html)
     html, options = prepare_options(html, options)
+    print('--------------------in get_pdf -----------')
 
     options.update({
         "disable-javascript": "",
@@ -50,8 +51,10 @@ def get_pdf(html, options=None, output=None):
         options.update({"disable-smart-shrinking": ""})
 
     try:
+        print('-----------in try block------------------')
         # Set filename property to false, so no file is actually created
         filedata = pdfkit.from_string(html, False, options=options or {})
+
 
         # https://pythonhosted.org/PyPDF2/PdfFileReader.html
         # create in-memory binary streams from filedata and create a PdfFileReader object
