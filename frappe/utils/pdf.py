@@ -54,11 +54,13 @@ def get_pdf(html, options=None, output=None):
         print('-----------in try block------------------')
         # Set filename property to false, so no file is actually created
         filedata = pdfkit.from_string(html, False, options=options or {})
+        print('-----------in pdfkit ok------------------')
 
 
         # https://pythonhosted.org/PyPDF2/PdfFileReader.html
         # create in-memory binary streams from filedata and create a PdfFileReader object
         reader = PdfFileReader(io.BytesIO(filedata))
+        print('-------------------reader ok-------------------')
     except OSError as e:
         if any([error in str(e) for error in PDF_CONTENT_ERRORS]):
             if not filedata:
@@ -69,6 +71,8 @@ def get_pdf(html, options=None, output=None):
             if output:  # output is a PdfFileWriter object
                 output.appendPagesFromReader(reader)
         else:
+            print('-------------except---------------')
+            print(e)
             raise
 
     if "password" in options:
