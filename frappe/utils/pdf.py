@@ -34,7 +34,7 @@ def getBase64Img(file):
     return my_string
 
 def getImagePath():
-    path="/home/dhananjana/python_project/modehero/sites/modehero.com/public"
+    path="/opt/bench/mode-hero-erp/sites/modehero.com/public"
     # /opt/bench/mode-hero-erp/sites/modehero.com/public
     # "/home/dhananjana/python_project/modehero/sites/modehero.com/public"
     return path
