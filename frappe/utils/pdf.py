@@ -12,6 +12,8 @@ import six
 from bs4 import BeautifulSoup
 from PyPDF2 import PdfFileReader, PdfFileWriter
 
+import socket
+
 import base64
 import frappe
 from frappe import _
@@ -35,9 +37,13 @@ def getBase64Img(file):
 
 def getImagePath():
     path="/opt/bench/mode-hero-erp/sites/modehero.com/public"
-
-    url =  os.environ.get('USERNAME')
-    print('-------------------------------'+url)
+    ## getting the hostname by socket.gethostname() method
+    hostname = socket.gethostname()
+    ## getting the IP address using socket.gethostbyname() method
+    ip_address = socket.gethostbyname(hostname)
+    ## printing the hostname and ip_address
+    # url =  os.environ.get('USERNAME')
+    print('-------------------------------'+hostname,ip_address)
     # /opt/bench/mode-hero-erp/sites/modehero.com/public
     # "/home/dhananjana/python_project/modehero/sites/modehero.com/public"
     return path
