@@ -24,9 +24,7 @@ PDF_CONTENT_ERRORS = ["ContentNotFoundError", "ContentOperationNotPermittedError
 def getBase64Img(file):
     
 
-    path_prefix = "/opt/bench/mode-hero-erp/sites/modehero.com/public"
-    # /opt/bench/mode-hero-erp/sites/modehero.com/public
-    # "/home/dhananjana/python_project/modehero/sites/modehero.com/public"
+    path_prefix = getImagePath()
 
     fp = path_prefix+str(file)
     with open(fp, "rb") as img_file:
@@ -35,6 +33,11 @@ def getBase64Img(file):
 
     return my_string
 
+def getImagePath():
+    path="/home/dhananjana/python_project/modehero/sites/modehero.com/public"
+    # /opt/bench/mode-hero-erp/sites/modehero.com/public
+    # "/home/dhananjana/python_project/modehero/sites/modehero.com/public"
+    return path
 
 def get_pdf(html, options=None, output=None):
     html = scrub_urls(html)
