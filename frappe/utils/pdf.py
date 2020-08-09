@@ -36,16 +36,18 @@ def getBase64Img(file):
     return my_string
 
 def getImagePath():
-    path="/opt/bench/mode-hero-erp/sites/modehero.com/public"
+    
     ## getting the hostname by socket.gethostname() method
     hostname = socket.gethostname()
+    if(hostname == 'vm1'):
+        path="/opt/bench/mode-hero-erp/sites/modehero.com/public"
+    else:
+        path="/home/dhananjana/python_project/modehero/sites/modehero.com/public"
     ## getting the IP address using socket.gethostbyname() method
     ip_address = socket.gethostbyname(hostname)
-    ## printing the hostname and ip_address
-    # url =  os.environ.get('USERNAME')
+   
     print('-------------------------------'+hostname,ip_address)
-    # /opt/bench/mode-hero-erp/sites/modehero.com/public
-    # "/home/dhananjana/python_project/modehero/sites/modehero.com/public"
+  
     return path
 
 def get_pdf(html, options=None, output=None):
