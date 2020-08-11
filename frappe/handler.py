@@ -20,7 +20,7 @@ def handle():
 	cmd = frappe.local.form_dict.cmd
 	data = None
 
-	if cmd!='login':
+	if cmd != 'login':
 		data = execute_cmd(cmd)
 
 	# data can be an empty string or list which are valid responses
@@ -52,7 +52,7 @@ def execute_cmd(cmd, from_async=False):
 			raise e
 		else:
 			frappe.respond_as_web_page(title='Invalid Method', html='Method not found',
-			indicator_color='red', http_status_code=404)
+									   indicator_color='red', http_status_code=404)
 		return
 
 	if from_async:
@@ -65,10 +65,18 @@ def execute_cmd(cmd, from_async=False):
 
 def is_whitelisted(method):
 	# check if whitelisted
-	if frappe.session['user'] == 'Guest':
+	if (frappe.session['user'] == 'Guest'):
 		if (method not in frappe.guest_methods):
-			frappe.msgprint(_("Not permitted"))
-			raise frappe.PermissionError('Not Allowed, {0}'.format(method))
+			if(method in frappe.email_guest_methods):
+				if (isfromMail()):
+					pass
+				else:
+					frappe.msgprint(_("Not permitted"))
+					raise frappe.PermissionError('Not Allowed, {0}'.format(method))
+
+			else:
+				frappe.msgprint(_("Not permitted"))
+				raise frappe.PermissionError('Not Allowed, {0}'.format(method))
 
 		if method not in frappe.xss_safe_methods:
 			# strictly sanitize form_dict
@@ -82,13 +90,25 @@ def is_whitelisted(method):
 			frappe.msgprint(_("Not permitted"))
 			raise frappe.PermissionError('Not Allowed, {0}'.format(method))
 
+def isfromMail():
+		s=(str(frappe.request.referrer).split('?')[1]).split('&')
+		if(len(s)>1):
+    			if(s[1].split('=')[0]=='sk'):
+    					return True
+		else:
+				return False
+
+		
+
 @frappe.whitelist(allow_guest=True)
 def version():
 	return frappe.__version__
 
 @frappe.whitelist()
 def runserverobj(method, docs=None, dt=None, dn=None, arg=None, args=None):
-	frappe.desk.form.run_method.runserverobj(method, docs=docs, dt=dt, dn=dn, arg=arg, args=args)
+	frappe.desk.form.run_method.runserverobj(
+		method, docs=docs, dt=dt, dn=dn, arg=arg, args=args)
+
 
 @frappe.whitelist(allow_guest=True)
 def logout():
@@ -100,7 +120,7 @@ def web_logout():
 	frappe.local.login_manager.logout()
 	frappe.db.commit()
 	frappe.respond_as_web_page(_("Logged Out"), _("You have been successfully logged out"),
-		indicator_color='green')
+							   indicator_color='green')
 
 @frappe.whitelist(allow_guest=True)
 def run_custom_method(doctype, name, custom_method):
@@ -111,7 +131,8 @@ def run_custom_method(doctype, name, custom_method):
 	else:
 		frappe.throw(_("Not permitted"), frappe.PermissionError)
 
-@frappe.whitelist()
+
+@frappe.whitelist(allow_email_guest=True)
 def uploadfile():
 	ret = None
 
@@ -210,6 +231,6 @@ def get_attr(cmd):
 	frappe.log("method:" + cmd)
 	return method
 
-@frappe.whitelist(allow_guest = True)
+@frappe.whitelist(allow_guest=True)
 def ping():
 	return "pong"

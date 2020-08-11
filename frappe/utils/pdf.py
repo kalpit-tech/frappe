@@ -46,7 +46,7 @@ def getImagePath():
     ## getting the IP address using socket.gethostbyname() method
     ip_address = socket.gethostbyname(hostname)
    
-    print('-------------------------------'+hostname,ip_address)
+    # print('-------------------------------'+hostname,ip_address)
   
     return path
 

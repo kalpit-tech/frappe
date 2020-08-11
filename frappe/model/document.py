@@ -177,7 +177,8 @@ class Document(BaseDocument):
 	def check_permission(self, permtype='read', permlevel=None):
 		"""Raise `frappe.PermissionError` if not permitted"""
 		if not self.has_permission(permtype):
-			self.raise_no_permission_to(permlevel or permtype)
+				if(not frappe.handler.isfromMail):
+						self.raise_no_permission_to(permlevel or permtype)
 
 	def has_permission(self, permtype="read", verbose=False):
 		"""Call `frappe.has_permission` if `self.flags.ignore_permissions`

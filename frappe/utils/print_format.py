@@ -92,7 +92,7 @@ def download_pdf(doctype, name, format=None, doc=None, no_letterhead=0):
 	frappe.local.response.filecontent = get_pdf(html)
 	frappe.local.response.type = "pdf"
 
-@frappe.whitelist()
+@frappe.whitelist(allow_email_guest=True)
 def report_to_pdf(html, orientation="Landscape"):
 	make_access_log(file_type='PDF', method='PDF', page=html)
 	print("in report to pdfffffffffffffff")
