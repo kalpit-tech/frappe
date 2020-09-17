@@ -33,11 +33,16 @@ def getBase64Img(file):
         with open(fp, "rb") as img_file:
             my_string = base64.b64encode(img_file.read())
             my_string = "data:image/png;base64,"+my_string.decode('utf-8')
+<<<<<<< HEAD
     except FileNotFoundError as identifier:
         my_string=""
         print("No such file")
     
 
+=======
+    except:
+        my_string =  "data:image/png;base64,"
+>>>>>>> 2d87fbdc5ad8652d35ecb577485558138a763244
     return my_string
 
 def getImagePath():
