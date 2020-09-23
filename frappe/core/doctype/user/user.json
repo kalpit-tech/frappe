@@ -86,7 +86,8 @@
   "zip_code",
   "country",
   "tax_id",
-  "sb0_5"
+  "sb0_5",
+  "brand_name"
  ],
  "fields": [
   {
@@ -638,6 +639,11 @@
    "fieldname": "tax_id",
    "fieldtype": "Data",
    "label": "Tax ID"
+  },
+  {
+   "fieldname": "brand_name",
+   "fieldtype": "Data",
+   "label": "Brand Name"
   }
  ],
  "icon": "fa fa-user",
@@ -645,7 +651,7 @@
  "image_field": "user_image",
  "links": [],
  "max_attachments": 5,
- "modified": "2020-07-26 18:51:38.982080",
+ "modified": "2020-09-23 12:27:48.351089",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",

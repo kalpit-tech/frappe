@@ -12,6 +12,15 @@ login.bind_events = function() {
 		login.route();
 	});
 
+	$('#user-type').change(function () {
+		if($(this).val()=='brand'){
+			$('#brand_name').show()
+		}else{
+			$('#brand_name').val("")
+			$('#brand_name').hide()
+		}
+	})
+
 
 	$(".form-login").on("submit", function(event) {
 		event.preventDefault();
@@ -28,13 +37,14 @@ login.bind_events = function() {
 		return false;
 	});
 
-	$(".form-signup").on("submit", function(event) {
+	$("#submit").click(function(event) {
 		event.preventDefault();
 		var args = {};
 		args.cmd = "frappe.core.doctype.user.user.sign_up";
 		args.email = ($("#signup_email").val() || "").trim();
 		args.pwd = $("#signup_password").val();
 		args.user_type = $('#user-type').val();
+		args.brand_name=$('#brand_name').val();
 		args.redirect_to = frappe.utils.get_url_arg("redirect-to") || '';
 		args.full_name = ($("#signup_fullname").val() || "").trim();
 		if(!args.email || !validate_email(args.email) || !args.full_name) {
