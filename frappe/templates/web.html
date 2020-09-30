@@ -15,9 +15,13 @@
 			{% set rightMenuPages = ['fabric-summary', 'trimming-summary', 'packaging-summary','production-summary','prototype-summary'] %}
 			<div class="page-with-sidebar{% if path in rightMenuPages %} right-sidebar{% endif %}">
 				{% if 'Brand User' in roles %}
+				{% set brandName = frappe.get_doc('User', frappe.session.user).brand_name%}
+				{% set brand=frappe.get_doc('Company',brandName) %}
+				{%if brand.enabled==1%}
 				<div class="sidebar">
 					{% include 'erpnext/templates/sidenav.html' %}
 				</div>
+				{%endif%}
 				{% endif %}
 				<div class="page-body">
 					<div class="container-expand">
