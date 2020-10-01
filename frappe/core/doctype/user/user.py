@@ -819,7 +819,8 @@ def sign_up(email, full_name, pwd, user_type, brand_name, redirect_to):
                 "doctype": "Company",
                 "company_name": brand_name,
                 "email": email,
-                "default_currency": 'USD'
+                "default_currency": 'USD',
+                "enabled":1
             })
 
             company.flags.ignore_permissions = True

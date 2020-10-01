@@ -28,7 +28,7 @@
   }
  ],
  "links": [],
- "modified": "2020-09-01 15:10:11.957064",
+ "modified": "2020-10-01 19:10:17.200213",
  "modified_by": "Administrator",
  "module": "Printing",
  "name": "Uniform Invoice",
@@ -43,6 +43,18 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Brand User",
    "share": 1,
    "write": 1
   }
