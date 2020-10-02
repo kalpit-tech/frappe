@@ -310,8 +310,8 @@ class Document(BaseDocument):
 		self.set_name_in_children()
 
 		self.validate_higher_perm_levels()
-		self._validate_links()
 		self.run_before_save_methods()
+		self._validate_links()
 
 		if self._action != "cancel":
 			self._validate()
