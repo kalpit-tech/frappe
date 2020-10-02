@@ -123,8 +123,7 @@
    "fieldtype": "Data",
    "label": "First Name",
    "oldfieldname": "first_name",
-   "oldfieldtype": "Data",
-   "reqd": 1
+   "oldfieldtype": "Data"
   },
   {
    "fieldname": "middle_name",
@@ -651,8 +650,8 @@
  "image_field": "user_image",
  "links": [],
  "max_attachments": 5,
- "modified": "2020-09-23 12:27:48.351089",
- "modified_by": "Administrator",
+ "modified": "2020-10-02 14:10:03.068770",
+ "modified_by": "branduser1@modehero.com",
  "module": "Core",
  "name": "User",
  "owner": "Administrator",

@@ -835,6 +835,7 @@ def sign_up(email, full_name, pwd, user_type, brand_name, redirect_to):
             "new_password": pwd,  # random_string(10),
             "type": user_type,
             "brand_name": brand_name,
+            "user_image":"/files/default_user_company_logo-3058b28cca9e293f85b78add4842bc64.png",
             "user_type": "Website User"
         })
 
