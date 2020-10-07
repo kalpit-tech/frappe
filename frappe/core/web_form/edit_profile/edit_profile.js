@@ -9,6 +9,7 @@ frappe.ready(function() {
 	
 	var parent_node =  document.getElementsByClassName("page-breadcrumbs")[0];
 	div_reset_password_button.append(reset_password_button)
+	div_reset_password_button.style["margin-bottom"] = "20px"
 	parent_node.after(div_reset_password_button);
 })
 
