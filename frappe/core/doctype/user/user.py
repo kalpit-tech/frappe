@@ -830,6 +830,7 @@ def sign_up(email, full_name, pwd, user_type, brand_name, redirect_to):
         user = frappe.get_doc({
             "doctype": "User",
             "email": email,
+            "owner":email,
             "first_name": full_name,
             "enabled": 1,
             "new_password": pwd,  # random_string(10),
