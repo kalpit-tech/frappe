@@ -332,6 +332,12 @@ def get_context(context):
 def accept(web_form, data, docname=None, for_payment=False):
 	'''Save the web form'''
 	data = frappe._dict(json.loads(data))
+	is_official = is_official_snf(web_form,data)
+	if (is_official=="True"):
+		return {"status":"ok"}
+	elif (is_official=="Error"):
+		return None
+	
 	for_payment = frappe.parse_json(for_payment)
 
 	files = []
@@ -432,7 +438,10 @@ def accept(web_form, data, docname=None, for_payment=False):
 
 def inject_brand(doc):
 	roles = frappe.get_roles(frappe.session.user)
-	if 'Brand User' in roles:
+	if 'Administrator' in roles:
+		doc.brand = None
+		doc.brand_name = None
+	elif 'Brand User' in roles:
 		doc.brand = frappe.get_value('User', frappe.session.user, 'brand_name')
 		doc.brand_name = frappe.get_value('User', frappe.session.user, 'brand_name')
 	elif 'Customer' in roles:
@@ -548,6 +557,9 @@ def get_form_data(doctype, docname=None, web_form_name=None):
 
 		if field.fieldtype == "Link":
 			field.fieldtype = "Autocomplete"
+			if (doctype=="Production Factory" and field.fieldname=="factory_name") or (doctype=="Supplier" and field.fieldname=="supplier_name") :
+				field.options = ""
+				continue
 			field.options = get_link_options(
 				web_form_name,
 				field.options,
@@ -618,3 +630,59 @@ def get_link_options(web_form_name, doctype, allow_read_on_all_link_options=Fals
 	else:
 		raise frappe.PermissionError('Not Allowed, {0}'.format(doctype))
 
+def is_official_snf(web_form,data):
+	user = frappe.session.user
+	user_doc = frappe.get_doc('User', user)
+	roles = frappe.get_roles(user)
+	if "Administrator" in roles or user_doc.brand_name==None:
+		return "Error"
+	elif web_form=="supply":
+		official_suppliers = frappe.get_all("Supplier",{"is_official":1,"name":data["supplier_name"]})
+		if len(official_suppliers)>0:
+			if not(add_official_snf(official_suppliers[0]["name"],"Supplier",user_doc.brand_name)):return "Error"
+		else:
+			return False			
+	elif web_form=="production-factory":
+		official_factories = frappe.get_all("Production Factory",{"is_official":1,"factory_name":data["factory_name"]})
+		if len(official_factories)>0:
+			if not(add_official_snf(official_factories[0]["name"],"Production Factory",user_doc.brand_name)): return "Error"
+		else:
+			return False
+	else: 
+		return False
+	return "True"
+
+def add_official_snf(name,doctype,brand):
+	doc=None
+	try:
+		doc = frappe.get_doc(doctype,name)
+	except Exception:
+		return False
+	child = None
+	if doctype=="Supplier":
+		if (check_already(brand,name,"Brand Suppliers")):
+			return False
+		child = {
+			"supplier":name,
+			"brand": brand,
+		}
+	elif doctype=="Production Factory":
+		if (check_already(brand,name,"Brand Factory")):
+			return False
+		child = {
+			"factory":name,
+			"brand": brand
+		}
+	doc.append("assigned_brands",child)
+	doc.save() 
+	frappe.db.commit()
+	return True
+
+def check_already(brand,snf,doctype):
+	if doctype=="Brand Factory":
+		already_list = frappe.get_all(doctype,{"brand":brand,"factory":snf})
+	else:
+		already_list = frappe.get_all(doctype,{"brand":brand,"supplier":snf})
+	if len(already_list)>0:
+		return True
+	return False
