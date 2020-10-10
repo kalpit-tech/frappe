@@ -305,8 +305,9 @@ class User(Document):
 
         args.update(add_args)
 
-        sender = frappe.session.user not in STANDARD_USERS and get_formatted_email(
-            frappe.session.user) or None
+        # sender = frappe.session.user not in STANDARD_USERS and get_formatted_email(
+        #     frappe.session.user) or None
+        sender=None
 
         frappe.sendmail(recipients=self.email, sender=sender, subject=subject,
                         template=template, args=args, header=[
