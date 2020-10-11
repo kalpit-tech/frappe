@@ -145,7 +145,10 @@ def get_context(context):
 						context.is_list = True
 				else:
 					if frappe.session.user != 'Guest' and not frappe.form_dict.name:
-						frappe.form_dict.name = frappe.db.get_value(self.doc_type, {"owner": frappe.session.user}, "name")
+						if self.doc_type=="User":
+							frappe.form_dict.name = frappe.session.user
+						else:
+							frappe.form_dict.name = frappe.db.get_value(self.doc_type, {"owner": frappe.session.user}, "name")
 
 					if not frappe.form_dict.name:
 						# only a single doc allowed and no existing doc, hence new
@@ -540,7 +543,10 @@ def get_form_data(doctype, docname=None, web_form_name=None):
 	out.web_form = web_form
 
 	if frappe.session.user != 'Guest' and not docname and not web_form.allow_multiple:
-		docname = frappe.db.get_value(doctype, {"owner": frappe.session.user}, "name")
+		if doctype=="User":
+			docname = frappe.session.user
+		else:
+			docname = frappe.db.get_value(doctype, {"owner": frappe.session.user}, "name")
 
 	if docname:
 		doc = frappe.get_doc(doctype, docname)
