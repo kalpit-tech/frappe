@@ -251,7 +251,7 @@ def resolve_path(path):
 	if path.endswith('.html'):
 		path = path[:-5]
 
-	if path == "index":
+	if (path == "index" or path=="desk"):
 		path = get_home_page()
 
 	frappe.local.path = path
