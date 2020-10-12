@@ -640,17 +640,19 @@ def is_official_snf(web_form,data):
 	user = frappe.session.user
 	user_doc = frappe.get_doc('User', user)
 	roles = frappe.get_roles(user)
-	if "Administrator" in roles or user_doc.brand_name==None:
-		return "Error"
-	elif web_form=="supply":
+	if web_form=="supply":
 		official_suppliers = frappe.get_all("Supplier",{"is_official":1,"name":data["supplier_name"]})
 		if len(official_suppliers)>0:
+			if "Administrator" in roles or user_doc.brand_name==None:
+				return "Error"
 			if not(add_official_snf(official_suppliers[0]["name"],"Supplier",user_doc.brand_name)):return "Error"
 		else:
 			return False			
 	elif web_form=="production-factory":
 		official_factories = frappe.get_all("Production Factory",{"is_official":1,"factory_name":data["factory_name"]})
 		if len(official_factories)>0:
+			if "Administrator" in roles or user_doc.brand_name==None:
+				return "Error"
 			if not(add_official_snf(official_factories[0]["name"],"Production Factory",user_doc.brand_name)): return "Error"
 		else:
 			return False
