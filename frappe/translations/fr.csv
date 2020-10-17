@@ -538,7 +538,7 @@ apps/frappe/frappe/utils/oauth.py,Email not verified with {0},Email non vérifi�
 DocType: Dashboard Chart,Time Series Based On,Série temporelle basée sur
 apps/frappe/frappe/public/js/frappe/form/footer/timeline.js,changed value of {0},valeur de {0} changée
 DocType: Report,JSON,JSON
-apps/frappe/frappe/core/doctype/user/user.py,Please check your email for verification,Veuillez vérifier votre email pour validation
+apps/frappe/frappe/core/doctype/user/user.py,Please check your email for verification,Un email de validation vient de vous être envoyé, merci de vérifier votre boîte
 apps/frappe/frappe/core/doctype/doctype/doctype.py,Fold can not be at the end of the form,Un Pli ne peut pas être à la fin du formulaire
 DocType: Communication,Bounced,Refusés
 apps/frappe/frappe/public/js/frappe/form/grid_pagination.js,of,de
