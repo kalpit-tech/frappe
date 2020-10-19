@@ -52,6 +52,7 @@ login.bind_events = function() {
 			return false;
 		}
 		login.call(args);
+		// window.location.href='/login'
 		return false;
 	});
 

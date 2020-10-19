@@ -15,6 +15,8 @@ import frappe.permissions
 import frappe.share
 import re
 import json
+import string
+import random
 
 from frappe.website.utils import is_signup_enabled
 from frappe.utils.background_jobs import enqueue
@@ -789,9 +791,13 @@ def reset_user_data(user):
 def verify_password(password):
     frappe.local.login_manager.check_password(frappe.session.user, password)
 
+def get_random_string(length):
+    letters = string.ascii_lowercase
+    result_str = ''.join(random.choice(letters) for i in range(length))
+    return result_str
 
 @frappe.whitelist(allow_guest=True)
-def sign_up(email, full_name, pwd, user_type, brand_name, redirect_to):
+def sign_up(email, full_name, user_type, brand_name, redirect_to):
     if not is_signup_enabled():
         frappe.throw(_('Sign Up is disabled'), title='Not Allowed')
 
@@ -834,7 +840,7 @@ def sign_up(email, full_name, pwd, user_type, brand_name, redirect_to):
             "owner":email,
             "first_name": full_name,
             "enabled": 1,
-            "new_password": pwd,  # random_string(10),
+            "new_password": get_random_string(10),  # random_string(10),
             "type": user_type,
             "brand_name": brand_name,
             "user_image":"/files/default_user_company_logo-3058b28cca9e293f85b78add4842bc64.png",
@@ -868,7 +874,7 @@ def sign_up(email, full_name, pwd, user_type, brand_name, redirect_to):
             frappe.cache().hset('redirect_after_login', user.name, redirect_to)
 
         if user.flags.email_sent:
-            return 1, _("Please check your email for verification")
+            return 1, _("Please check emails, to connect to the platform")
         else:
             return 2, _("Please ask your administrator to verify your sign-up")
 
