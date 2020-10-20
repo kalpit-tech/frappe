@@ -102,7 +102,8 @@ def get_list_data(doctype, txt=None, limit_start=0, fields=None, cmd=None, limit
 
 	# list context to be used if called as rendered list
 	frappe.flags.list_context = list_context
-
+	# if doctype=="Point Of Sales":
+	# 	raw_result = filter_by_brand(raw_result)
 	return raw_result
 
 def set_route(context):
@@ -200,3 +201,12 @@ def get_list(doctype, txt, filters, limit_start, limit_page_length=20, ignore_pe
 		limit_page_length = limit_page_length, ignore_permissions=ignore_permissions,
 		order_by=order_by)
 
+# def filter_by_brand(raw_result):
+# 	user = frappe.session.user
+# 	user_doc = frappe.get_doc('User', user)
+# 	temp_result = []
+# 	for raw in raw_result:
+# 		if raw.brand ==user_doc.brand_name:
+# 			temp_result.append(raw)
+# 	return temp_result
+	
