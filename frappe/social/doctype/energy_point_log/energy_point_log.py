@@ -51,7 +51,7 @@ class EnergyPointLog(Document):
 			reference_log.save()
 
 	def revert(self, reason):
-		frappe.only_for('System Manager')
+		#frappe.only_for('System Manager')
 		if self.type != 'Auto':
 			frappe.throw(_('This document cannot be reverted'))
 
