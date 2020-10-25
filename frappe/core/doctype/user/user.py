@@ -70,7 +70,7 @@ class User(Document):
             self.validate_email_type(self.name)
         self.add_system_manager_role()
         self.set_system_user()
-        self.set_full_name()
+        # self.set_full_name()
         self.check_enable_disable()
         self.ensure_unique_roles()
         self.remove_all_roles_for_guest()
