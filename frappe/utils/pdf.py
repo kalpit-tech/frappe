@@ -41,17 +41,15 @@ def getBase64Img(file):
     return my_string
 
 def getImagePath():
-
-    path='/home/dhananjana/python_project/modehero/sites/modehero.com/public'
     
     ## getting the hostname by socket.gethostname() method
-    # hostname = socket.gethostname()
-    # if(hostname == 'vm1'):
-    #     path="/opt/bench/mode-hero-erp/sites/modehero.com/public"
-    # else:
-    #     path="/home/dhananjana/python_project/modehero/sites/modehero.com/public"
-    # ## getting the IP address using socket.gethostbyname() method
-    # ip_address = socket.gethostbyname(hostname)
+    hostname = socket.gethostname()
+    if(hostname == 'vm1'):
+        path="/opt/bench/mode-hero-erp/sites/modehero.com/public"
+    else:
+        path="/home/dhananjana/python_project/modehero/sites/modehero.com/public"
+    ## getting the IP address using socket.gethostbyname() method
+    ip_address = socket.gethostbyname(hostname)
    
     # print('-------------------------------'+hostname,ip_address)
   
