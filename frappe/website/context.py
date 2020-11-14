@@ -7,7 +7,7 @@ import frappe, os, json
 from frappe.website.doctype.website_settings.website_settings import get_website_settings
 from frappe.website.router import get_page_context
 from frappe.model.document import Document
-from erpnext.modehero.user import haveAccess,getAccessList
+# from erpnext.modehero.user import haveAccess,getAccessList
 
 def get_context(path, args=None):
 	if args and args.source:
@@ -25,7 +25,7 @@ def get_context(path, args=None):
 		context["path"] = path
 
 	context.route = context.path
-	context.accessList=getAccessList()
+	context.accessList=['client','supply','pre_production','production','shipment','stock','snf']
 
 	context = build_context(context)
 
