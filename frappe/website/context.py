@@ -7,7 +7,39 @@ import frappe, os, json
 from frappe.website.doctype.website_settings.website_settings import get_website_settings
 from frappe.website.router import get_page_context
 from frappe.model.document import Document
-# from erpnext.modehero.user import haveAccess,getAccessList
+from datetime import date, datetime
+
+
+def inTrialPeriod(doc):
+    dateformat = '%d/%m/%Y'
+    spent_duration=datetime.now() - datetime.strptime(frappe.format(doc.creation, 'Date'), dateformat)
+    trial_period=frappe.get_all("System Data",filters={'type':'brand-trial-period'},fields=['value'])
+    if(spent_duration.days<=int(trial_period[0]['value'])):
+        return True
+    else:
+        return False
+
+
+def getAccessList():
+    # brandName=frappe.get_doc('User', frappe.session.user).brand_name
+    if(frappe.get_doc('User', frappe.session.user).type=='brand' or frappe.get_doc('User', frappe.session.user).type=='Administrator' ):
+        modules=['client','supply','pre_production','production','shipment','stock','snf']
+        brandName=frappe.get_doc('User', frappe.session.user).brand_name
+        brand=frappe.get_doc("Company",brandName)
+        # subscribedPlan=frappe.get_doc("Payment Plan",brand.subscribed_plan)
+        brandDict=brand.__dict__
+        accessingModules=[]
+
+        if(inTrialPeriod(brand)):
+            accessingModules=modules
+        else:
+            for mod in modules:
+                if(brandDict[mod]==1):
+                    accessingModules.append(mod)
+
+        return accessingModules
+    return []
+
 
 def get_context(path, args=None):
 	if args and args.source:
@@ -25,7 +57,7 @@ def get_context(path, args=None):
 		context["path"] = path
 
 	context.route = context.path
-	context.accessList=['client','supply','pre_production','production','shipment','stock','snf']
+	context.accessList=getAccessList()
 
 	context = build_context(context)
 
