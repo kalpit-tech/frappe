@@ -41,17 +41,7 @@ def getBase64Img(file):
     return my_string
 
 def getImagePath():
-    
-    ## getting the hostname by socket.gethostname() method
-    hostname = socket.gethostname()
-    if(hostname == 'vm1'):
-        path=frappe.get_all("System Data",filters={'type':'server-image-path'},fields=['value'])
-    else:
-        path=frappe.get_all("System Data",filters={'type':'local-image-path'},fields=['value'])
-    ## getting the IP address using socket.gethostbyname() method
-    ip_address = socket.gethostbyname(hostname)
-   
-    # print('-------------------------------'+hostname,ip_address)
+    path=os.getcwd()+'/sites/modehero.com/public'
   
     return path
 
