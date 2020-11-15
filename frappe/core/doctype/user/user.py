@@ -14,6 +14,7 @@ from bs4 import BeautifulSoup
 import frappe.permissions
 import frappe.share
 import re
+import os
 import json
 import string
 import random
@@ -833,6 +834,7 @@ def sign_up(email, full_name, user_type, brand_name, redirect_to):
             company.flags.ignore_permissions = True
             company.flags.ignore_password_policy = True
             company.insert()
+        default_logo=os.environ['DEFAULT_COMPANY_LOGO_URL']
 
         user = frappe.get_doc({
             "doctype": "User",
@@ -843,8 +845,9 @@ def sign_up(email, full_name, user_type, brand_name, redirect_to):
             "new_password": get_random_string(10),  # random_string(10),
             "type": user_type,
             "brand_name": brand_name,
-            "user_image":"/files/default_user_company_logo-3058b28cca9e293f85b78add4842bc64.png",
+            "user_image":default_logo,
             "user_type": "Website User"
+
         })
 
         user.flags.ignore_permissions = True
