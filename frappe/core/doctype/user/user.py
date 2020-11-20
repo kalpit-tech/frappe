@@ -834,7 +834,7 @@ def sign_up(email, full_name, user_type, brand_name, redirect_to):
             company.flags.ignore_permissions = True
             company.flags.ignore_password_policy = True
             company.insert()
-        default_logo=frappe.get_conf().get("default_company_logo_url")
+        default_logo=os.environ['DEFAULT_COMPANY_LOGO_URL']
 
         user = frappe.get_doc({
             "doctype": "User",
