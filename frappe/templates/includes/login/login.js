@@ -21,6 +21,13 @@ login.bind_events = function() {
 		}
 	})
 
+	if(window.location.hash === '#signup'){
+		$('body').find('.btn-login-area').html(`<a href="#login" class="blue" style="margin: 56px">Do you have an account? Log-in</a>`)
+	}
+
+	$('body').find('.sign-up-message').on("click", function(event) { 
+		$('body').find('.btn-login-area').html(`<a href="#login" class="blue" style="margin: 56px">Do you have an account? Log-in</a>`)
+	})
 
 	$(".form-login").on("submit", function(event) {
 		event.preventDefault();
@@ -37,22 +44,28 @@ login.bind_events = function() {
 		return false;
 	});
 
-	$("#submit").click(function(event) {
+	$(".form-signup").on("submit", function(event) {
 		event.preventDefault();
 		var args = {};
-		args.cmd = "frappe.core.doctype.user.user.sign_up";
-		args.email = ($("#signup_email").val() || "").trim();
-		args.pwd = $("#signup_password").val();
-		args.user_type = $('#user-type').val();
-		args.brand_name=$('#brand_name').val();
-		args.redirect_to = frappe.utils.get_url_arg("redirect-to") || '';
-		args.full_name = ($("#signup_fullname").val() || "").trim();
+		args.cmd = "frappe.www.sign_up.sign_up";
+		args.email = ($("#email_id").val() || "").trim();
+		args.pwd = $("#new_password").val();
+		args.confirm_pwd = $("#confirm_password").val(); 
+		args.full_name = ($("#first_name").val() || "").trim();
+		args.user_type = $('#user_type').val();
+		args.company_name=$('#company_name').val();
+		args.redirect_to = 'http://www.google.com';
 		if(!args.email || !validate_email(args.email) || !args.full_name) {
 			login.set_indicator('{{ _("Valid email and name required") }}', 'red');
 			return false;
 		}
+		if(args.confirm_pwd != args.pwd) {
+			frappe.throw(__('Password and Confirm Passwords are not matching'));
+		}
 		login.call(args);
-		// window.location.href='/login'
+
+		document.getElementById("sign_up").disabled = true;
+		$('body').find('.form-control').attr("disabled", true);
 		return false;
 	});
 
@@ -66,6 +79,11 @@ login.bind_events = function() {
 			return false;
 		}
 		login.call(args);
+		return false;
+	});
+	$("#complete_signup").hide()
+	$("#setup").click(function() {
+		$("#complete_signup").toggle();
 		return false;
 	});
 
@@ -145,6 +163,7 @@ login.call = function(args, callback) {
 		args: args,
 		callback: callback,
 		freeze: true,
+		freeze_message: __("Creating srytawertyreyreAccounts..."),
 		statusCode: login.login_handlers
 	});
 }
@@ -184,6 +203,8 @@ login.login_handlers = (function() {
 
 	var login_handlers = {
 		200: function(data) {
+			console.log(data,"data_____________________\n\n")
+			// window.location.href= window.location.host +'/api/method/frappe.www.sign_up.verification';
 			if(data.message == 'Logged In'){
 				login.set_indicator('{{ _("Success") }}', 'green');
 				window.location.href = frappe.utils.get_url_arg("redirect-to") || data.home_page;
@@ -219,7 +240,13 @@ login.login_handlers = (function() {
 				}
 
 
-			} else if(window.location.hash === '#signup') {
+			} else if(window.location.hash === '#signup'){
+				if(data.message=='Success') {
+					window.location = 'http://localhost:8000/api/method/frappe.www.sign_up.verification';
+				}
+			}
+
+			/* else if(window.location.hash === '#signup') {
 				if(cint(data.message[0])==0) {
 					login.set_indicator(data.message[1], 'red');
 				} else {
@@ -227,7 +254,7 @@ login.login_handlers = (function() {
 					frappe.msgprint(data.message[1])
 				}
 				//login.set_indicator(__(data.message), 'green');
-			}
+			}*/
 
 			//OTP verification
 			if(data.verification && data.message != 'Logged In') {
@@ -247,7 +274,6 @@ login.login_handlers = (function() {
 		401: get_error_handler('{{ _("Invalid Login. Try again.") }}'),
 		417: get_error_handler('{{ _("Oops! Something went wrong") }}')
 	};
-
 	return login_handlers;
 } )();
 
