@@ -16,37 +16,45 @@ from frappe.website.utils import is_signup_enabled
 
 
 @frappe.whitelist(allow_guest=True)
-def sign_up(email,pwd,full_name,user_type,company_name,redirect_to):
-	print ("inside sign up________________\n\n")
+def sign_up(**kwargs):
 	try:
-		user = frappe.db.get('User', {'email': email})
-		check_if_user_enabled(user,email)
-		user_ = create_user(user,email,full_name,pwd,user_type,company_name,redirect_to)
-		if user_type == 'brand':
-			check_if_type_brand(user_type,company_name)
-			create_company(user_type,company_name,email)
+		user = frappe.db.get('User', {'email': kwargs.get('email')})
+		check_if_user_enabled(user,kwargs.get('email'))
+		user_ = create_user(user,kwargs)
+		if kwargs.get('user_type') == 'brand':
+			check_if_type_brand(kwargs.get('user_type'),kwargs.get('company_name'))
+			create_company(kwargs.get('user_type'),kwargs.get('company_name'),kwargs.get('email'))
 		send_verification_mail_(user_)
 		return "Success"
 	except Exception as e:
 		frappe.db.rollback()
-		title = _("Error while processing sign for {0}").format(email)
+		title = _("Error while processing sign for {0}").format(kwargs.get('email'))
 		traceback = frappe.get_traceback()
 		frappe.log_error(message=traceback , title=title)
-	
-	
+		frappe.throw(_("Something went wrong, please contact Administrator to check Error Log"))
+
 		
-def create_user(user,email,full_name,pwd,user_type,company_name,redirect_to):
+def create_user(user,kwargs):
+	user_type = kwargs.get('user_type')
 	user = frappe.get_doc({  
 	    'doctype': 'User',
-	    'email': email,
-	    'owner': email,
-	    'first_name': full_name,
-	    'enabled': 1,
-	    'new_password': pwd,
-	    'type': user_type,
-	    'brand_name': company_name,
+	    'email': kwargs.get('email'),
+	    'owner': kwargs.get('email'),
+	    'first_name': kwargs.get('full_name'),
+	    'last_name':kwargs.get('last_name'),
+	    'full_name':kwargs.get('full_name'),
+	    'enabled': 0,
+	    'new_password': kwargs.get('pwd'),
+	    'type': kwargs.get('user_type'),
+	    'brand_name': kwargs.get('company_name'),
 	    'verification_status':'Pending Verification',
-	    'user_type': 'Website User'
+	    'user_type': 'Website User',
+	    'address1':kwargs.get('address'),
+	    'zip_code':kwargs.get('zip_code'),
+	    'city':kwargs.get('city'),
+	    'country':kwargs.get('country'),
+	    'tax_id':kwargs.get('tax_id'),
+	    'language':'en'
 	    })
 
 	user.flags.ignore_permissions = True
@@ -54,30 +62,28 @@ def create_user(user,email,full_name,pwd,user_type,company_name,redirect_to):
 	user.flags.ignore_welcome_mail_to_user = True
 	user.insert()
 
-	# set default signup role as per Portal Settings
+	return user
 
+def add_user_roles(user):
+
+	# set default signup role as per Portal Settings
 	default_role = frappe.db.get_value('Portal Settings', None,
 	        'default_role')
 	if default_role:
 	    user.add_roles(default_role)
 
-	if user_type == 'brand':
+	if user.type == 'brand':
 	    user.add_roles('Brand User')
-	elif user_type == 'client':
+	elif user.type == 'client':
 	    user.add_roles('Brand User')
-	elif user_type == 'fabric_supplier':
+	elif user.type == 'fabric_supplier':
 	    user.add_roles('Fabric Vendor')
-	elif user_type == 'trimming_supplier':
+	elif user.type == 'trimming_supplier':
 	    user.add_roles('Trimming Vendor')
-	elif user_type == 'packaging_supplier':
+	elif user.type == 'packaging_supplier':
 	    user.add_roles('Packaging Vendor')
-	elif user_type == 'factory':
+	elif user.type == 'factory':
 	    user.add_roles('Manufacturing User')
-
-	if redirect_to:
-		frappe.cache().hset('redirect_after_login', user.name, redirect_to)
-	return user
-
 
 def check_if_user_enabled(user,email):
 	if not is_signup_enabled():
@@ -124,8 +130,6 @@ def isBrandNameExists(company_name):
         return False
 
 def send_verification_mail_(user_):
-	print ("inside mail________________\n\n")
-	print ("send_verification_mail_ mail________________\n\n")
 
 	from frappe.utils import get_url
 	from frappe.utils.user import get_user_fullname
@@ -159,7 +163,9 @@ def confirm_verification(email, name, host_name):
 	host_name = frappe.local.site
 	if doc.verification_status == 'Pending Verification':
 		doc.verification_status = 'Verified'
+		doc.enabled = 1
 		doc.save(ignore_permissions=True)
+		add_user_roles(doc)
 		frappe.db.commit()
 		frappe.respond_as_web_page(_("Confirmed"),
 			_("Your account has been verified. Please login"),
