@@ -21,6 +21,13 @@ login.bind_events = function() {
 		}
 	})
 
+	if(window.location.hash === '#signup'){
+		$('body').find('.btn-login-area').html(`<a href="#login" class="blue" style="margin: 56px">Do you have an account? Log-in</a>`)
+	}
+
+	$('body').find('.sign-up-message').on("click", function(event) { 
+		$('body').find('.btn-login-area').html(`<a href="#login" class="blue" style="margin: 56px">Do you have an account? Log-in</a>`)
+	})
 
 	$(".form-login").on("submit", function(event) {
 		event.preventDefault();
@@ -37,23 +44,34 @@ login.bind_events = function() {
 		return false;
 	});
 
-	$("#submit").click(function(event) {
+	$(".form-signup").on("submit", function(event) {
 		event.preventDefault();
 		var args = {};
-		args.cmd = "frappe.core.doctype.user.user.sign_up";
-		args.email = ($("#signup_email").val() || "").trim();
-		args.pwd = $("#signup_password").val();
-		args.user_type = $('#user-type').val();
-		args.brand_name=$('#brand_name').val();
-		args.redirect_to = frappe.utils.get_url_arg("redirect-to") || '';
-		args.full_name = ($("#signup_fullname").val() || "").trim();
+		args.cmd = "frappe.www.sign_up.sign_up";
+		args.email = ($("#email_id").val() || "").trim();
+		args.pwd = $("#new_password").val();
+		args.confirm_pwd = $("#confirm_password").val(); 
+		args.full_name = ($("#first_name").val() || "").trim();
+		args.last_name = ($("#last_name").val() || "").trim();
+		args.address = ($("#address").val() || "").trim();
+		args.zip_code = ($("#zip_code").val() || "").trim();
+		args.city = ($("#city").val() || "").trim();
+		args.country = ($("#country").val() || "").trim();
+		args.tax_id = ($("#tax_id").val() || "").trim();
+		args.user_type = $('#user_type').val();
+		args.company_name=$('#company_name').val();
 		if(!args.email || !validate_email(args.email) || !args.full_name) {
 			login.set_indicator('{{ _("Valid email and name required") }}', 'red');
 			return false;
 		}
-		login.call(args);
-		// window.location.href='/login'
-		return false;
+
+		var $inputs = $('.form-signup :input');
+        var values = {};
+        $inputs.each(function () {
+            values[this.name] = $(this).val();
+        });
+	   	validate_form(values)
+		get_password_strength(args)
 	});
 
 	$(".form-forgot").on("submit", function(event) {
@@ -66,6 +84,11 @@ login.bind_events = function() {
 			return false;
 		}
 		login.call(args);
+		return false;
+	});
+	$("#complete_signup").hide()
+	$("#setup").click(function() {
+		$("#complete_signup").toggle();
 		return false;
 	});
 
@@ -95,6 +118,8 @@ login.bind_events = function() {
 		});
 	{% endif %}
 }
+
+
 
 
 login.route = function() {
@@ -217,9 +242,13 @@ login.login_handlers = (function() {
 				} else {
 					login.set_indicator('{{ _("Instructions Emailed") }}', 'green');
 				}
+			} else if(window.location.hash === '#signup'){
+				if(data.message=='Success') {
+					window.location = window.location.host + '/api/method/frappe.www.sign_up.verification';
+				}
+			}
 
-
-			} else if(window.location.hash === '#signup') {
+			/* else if(window.location.hash === '#signup') {
 				if(cint(data.message[0])==0) {
 					login.set_indicator(data.message[1], 'red');
 				} else {
@@ -227,7 +256,7 @@ login.login_handlers = (function() {
 					frappe.msgprint(data.message[1])
 				}
 				//login.set_indicator(__(data.message), 'green');
-			}
+			}*/
 
 			//OTP verification
 			if(data.verification && data.message != 'Logged In') {
@@ -247,7 +276,6 @@ login.login_handlers = (function() {
 		401: get_error_handler('{{ _("Invalid Login. Try again.") }}'),
 		417: get_error_handler('{{ _("Oops! Something went wrong") }}')
 	};
-
 	return login_handlers;
 } )();
 
@@ -336,4 +364,70 @@ var continue_email = function(setup, prompt){
 		email_div.append(direction);
 		$('#otp_div').prepend(email_div);
 	}
+}
+
+var validate_zipcode = function(elementValue) {
+        var zipCodePattern = /^\d{5}$|^\d{5}-\d{4}$/;
+        if(elementValue && !zipCodePattern.test(elementValue)){
+        	frappe.throw(__('Please enter zip code correctly!'));
+        }
+    }
+
+var get_password_strength = function(args_) {
+		frappe.call({
+			type: 'POST',
+			method: 'frappe.core.doctype.user.user.test_password_strength',
+			args: {
+				new_password: args_.pwd || ''
+			},
+			callback: function(r) {
+				var result = r.message
+				if (result && result.feedback && !result.feedback.password_policy_validation_passed) {
+    				var suggestions = result['feedback']['suggestions'][0] ? result['feedback']['suggestions'] : ''
+    				var warning = result['feedback']['warning'] ? result['feedback']['warning'] : ''
+    				suggestions += "<br>" + __(" Hint: Include symbols, numbers and capital letters in the password") + '<br>'
+    				frappe.throw(__('Invalid Password: '+ warning + suggestions))
+				}
+				if(args_.confirm_pwd != args_.pwd) {
+					frappe.throw(__('Password and Confirm Passwords are not matching'));
+				}
+				validate_zipcode(args_.zip_code)
+
+				login.call(args_);
+
+				document.getElementById("sign_up").disabled = true;
+				$('body').find('.form-control').attr("disabled", true);
+				return false;
+			}
+
+		});
+	}
+var validate_form = function (input) {
+		        if (input['company_name']) {
+		        	validate_number(input['company_name'],"Company Name")
+		        }
+		        if (input['first_name']){
+		        	validate_number(input['first_name'],"First Name")
+		        }
+		        if (input['last_name']){
+		        	validate_number(input['last_name'],"Last Name")
+		        }
+		        if (input['address']){
+		        	validate_number(input['address'],"Address")
+		        }
+		        if (input['city']){
+		        	validate_number(input['city'],"City")
+		        }
+		        if (input['tax_id']){
+		        	validate_number(input['tax_id'],"Intraco Vat")
+		        }
+    
+	}	
+
+var validate_number = function (input,field) {
+	var numericPattern = /^[0-9]*$/;
+	if(numericPattern.test(input)){
+        	frappe.throw(__('Please enter alphanumeric input for ' +field));
+        }
+
 }

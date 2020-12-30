@@ -20,6 +20,7 @@
   "column_break0",
   "username",
   "language",
+  "verification_status",
   "time_zone",
   "user_image",
   "sb1",
@@ -640,6 +641,12 @@
    "fieldname": "brand_name",
    "fieldtype": "Data",
    "label": "Brand Name"
+  },
+  {
+   "fieldname": "verification_status",
+   "fieldtype": "Data",
+   "label": "Verification Status",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-user",
@@ -647,7 +654,7 @@
  "image_field": "user_image",
  "links": [],
  "max_attachments": 5,
- "modified": "2020-11-15 10:54:29.668533",
+ "modified": "2020-12-24 13:12:04.358398",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",
