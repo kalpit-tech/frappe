@@ -25,6 +25,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		if (this.allow_delete && !this.is_new) this.setup_delete_button();
 		if (this.is_new) this.setup_cancel_button();
 		this.setup_primary_action();
+		this.setup_later_button();
 		$(".link-btn").remove();
 
 		// webform client script
@@ -57,12 +58,23 @@ export default class WebForm extends frappe.ui.FieldGroup {
 
 	add_button(name, type, action, wrapper_class = ".web-form-actions") {
 		const button = document.createElement("button");
+		this.button = button
 		button.classList.add("btn", "btn-" + type, "btn-sm", "ml-2");
 		button.innerHTML = name;
 		button.onclick = action;
 		document.querySelector(wrapper_class).appendChild(button);
+		this.add_note(wrapper_class,name)
 	}
-
+	add_note(wrapper_class,name) {
+		if(name == "Send Mail Later") {
+			const para = document.createElement("p");
+			var qq = document.createTextNode("Invitation email to your supplier");
+			para.classList.add("help-box", "small", "text-muted" ,"hidden-xs")
+			para.appendChild(qq);   
+			para.style.cssText = 'text-align: center;padding-left: 103px;font-weight: BOLD;padding-top: 5px;' 
+			document.querySelector(wrapper_class).appendChild(para);
+		}
+	}
 	add_button_to_footer(name, type, action) {
 		this.add_button(name, type, action, '.web-form-footer');
 	}
@@ -84,7 +96,53 @@ export default class WebForm extends frappe.ui.FieldGroup {
 	setup_cancel_button() {
 		this.add_button_to_header("Cancel", "light", () => this.cancel());
 	}
+	setup_later_button() {
+		this.get_send_mail_details();
+	}
+	get_send_mail_details () {
+		if (this.doc.email) {
+			frappe.call({
+				type: "POST",
+				method: "frappe.core.doctype.user.user.get_send_mail_details",
+				args: {
+					email: this.doc.email,
+				},
+				callback: response => {
+					this.add_button_to_footer("Send Mail Later", "primary", () => this.send_mail());
+					this.button.setAttribute("style", "background-color: red;");
+					if (!response.exc) {
+						if (!response.message) {
+							this.button.style.backgroundColor = "red";
+						}
+						else {
+							this.button.style.backgroundColor = "#3b3dbf";
+						}
+					}
+				}
+			});
+		}
 
+	}
+	send_mail () {
+		frappe.call({
+			type: "POST",
+			method: "frappe.core.doctype.user.user.send_welcome_mail_to_supplier",
+			args: {
+				data: this.doc,
+			},
+			callback: response => {
+				if (!response.exc) {
+					if (response.message == 'Success') {
+						this.button.setAttribute("style", "background-color: #3b3dbf;");
+					}
+				}
+			},
+			always: function () {
+				window.saving = false;
+			}
+		});
+		return true
+	}
 	setup_delete_button() {
 		this.add_button_to_header(
 			'<i class="fa fa-trash" aria-hidden="true"></i>',
