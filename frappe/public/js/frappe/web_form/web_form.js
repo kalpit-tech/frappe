@@ -25,7 +25,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		if (this.allow_delete && !this.is_new) this.setup_delete_button();
 		if (this.is_new) this.setup_cancel_button();
 		this.setup_primary_action();
-		this.setup_later_button();
+		if (this.doc.doctype == "Supplier") this.setup_later_button();
 		$(".link-btn").remove();
 
 		// webform client script
@@ -63,7 +63,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		button.innerHTML = name;
 		button.onclick = action;
 		document.querySelector(wrapper_class).appendChild(button);
-		this.add_note(wrapper_class,name)
+		if (this.doc.doctype == "Supplier") this.add_note(wrapper_class,name)
 	}
 	add_note(wrapper_class,name) {
 		if(name == "Send Mail Later") {
