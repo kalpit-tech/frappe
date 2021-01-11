@@ -1236,3 +1236,29 @@ def generate_keys(user):
 
         return {"api_secret": api_secret}
     frappe.throw(frappe._("Not Permitted"), frappe.PermissionError)
+
+@frappe.whitelist()
+def send_welcome_mail_to_supplier(data):
+    data = json.loads(data)
+    if data.get('email'):
+        user_details = frappe.db.get_value("User",data.get('email'),["name","send_welcome_email"],as_dict=1) or []
+        if user_details and user_details.get('name'):
+            if not user_details.get('send_welcome_email'):
+                user_ = frappe.get_doc("User", data.get('email'))
+                if not user_.flags.no_welcome_mail:
+                    user_.send_welcome_mail_to_user()
+                    user_.flags.email_sent = 1
+                    user_.send_welcome_email = 1
+                    user_.flags.ignore_permissions = True
+                    user_.flags.ignore_password_policy = True
+                    user_.save()
+                    if frappe.session.user != 'Guest':
+                        msgprint(_("Welcome email sent"))
+                    return "Success"
+            else:frappe.throw("Welcome email alreay sent")
+        else:frappe.throw("Please create supplier first with email <b>{}</b>".format(data.get('email')))
+    else:frappe.throw("Please enter email")
+
+@frappe.whitelist()
+def get_send_mail_details(email):
+    return frappe.db.get_value("User",{"name":email},"send_welcome_email")
