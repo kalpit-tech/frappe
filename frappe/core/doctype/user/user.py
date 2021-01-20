@@ -1240,11 +1240,12 @@ def generate_keys(user):
 @frappe.whitelist()
 def send_welcome_mail_to_supplier(data):
     data = json.loads(data)
-    if data.get('email'):
-        user_details = frappe.db.get_value("User",data.get('email'),["name","send_welcome_email"],as_dict=1) or []
+    email = data.get('email') or data.get('email_address') if data else ""
+    if email:
+        user_details = frappe.db.get_value("User",email,["name","send_welcome_email"],as_dict=1) or []
         if user_details and user_details.get('name'):
             if not user_details.get('send_welcome_email'):
-                user_ = frappe.get_doc("User", data.get('email'))
+                user_ = frappe.get_doc("User", email)
                 if not user_.flags.no_welcome_mail:
                     user_.send_welcome_mail_to_user()
                     user_.flags.email_sent = 1
@@ -1256,9 +1257,21 @@ def send_welcome_mail_to_supplier(data):
                         msgprint(_("Welcome email sent"))
                     return "Success"
             else:frappe.throw("Welcome email alreay sent")
-        else:frappe.throw("Please create supplier first with email <b>{}</b>".format(data.get('email')))
+        else:frappe.throw("Please create supplier first with email <b>{}</b>".format(email))
     else:frappe.throw("Please enter email")
 
 @frappe.whitelist()
-def get_send_mail_details(email):
-    return frappe.db.get_value("User",{"name":email},"send_welcome_email")
+def get_user_details(email):
+    return frappe.db.get_value("User",{"name":email},["send_welcome_email","enabled"],as_dict=1)
+
+@frappe.whitelist()
+def make_enable_disable_user(email,action):
+    user_details = frappe.db.get_value("User",email,["name","enabled"],as_dict=1) or []
+    if user_details and user_details.get('name'):
+        user_ = frappe.get_doc("User", email)
+        user_.enabled = 0 if action == 'Disconnect' else 1
+        user_.flags.ignore_permissions = True
+        user_.flags.ignore_password_policy = True
+        user_.save()
+        user_.add_roles('Customer')
+        return "Success"
