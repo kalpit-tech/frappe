@@ -25,12 +25,35 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		if (this.allow_delete && !this.is_new) this.setup_delete_button();
 		if (this.is_new) this.setup_cancel_button();
 		this.setup_primary_action();
-		if (this.doc.doctype == "Supplier") this.setup_later_button();
+		if (this.doc.type == "brand") this.add_client_note()
+		if (this.doc.doctype == "Supplier" || this.doc.doctype == "Customer" ) this.setup_later_button();
 		$(".link-btn").remove();
 
 		// webform client script
 		frappe.init_client_script && frappe.init_client_script();
 		frappe.web_form.events.trigger('after_load');
+	}
+
+	add_client_note() {
+		frappe.call({
+			type: "POST",
+			method: "erpnext.modehero.user.validate_client",
+			args: {
+				doc: this.doc,
+				method: "validate_client"
+			},
+			callback: response => {
+				if (!response.exc) {
+					if (response.message.payment_plan) {
+						var note = "Note: You have " +response.message.customer+ " client accounts on " + response.message.payment_plan
+						let client_note = document.getElementById('client-note');
+						client_note.innerHTML = note;
+						client_note.style.cssText = 'text-align: center;font-weight: BOLD;padding-top: 4px;color:red' 
+					}
+				}
+			}
+		})
+
 	}
 
 	on(fieldname, handler) {
@@ -63,15 +86,15 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		button.innerHTML = name;
 		button.onclick = action;
 		document.querySelector(wrapper_class).appendChild(button);
-		if (this.doc.doctype == "Supplier") this.add_note(wrapper_class,name)
+		var user = this.doc.doctype == "Customer" ? "client" : "supplier"
+		if (this.doc.doctype == "Supplier" || this.doc.doctype == "Customer") this.add_note(".web-form-note",name,user)
 	}
-	add_note(wrapper_class,name) {
-		if(name == "Send Mail Later") {
+	add_note(wrapper_class,name,user) {
+		if(name == "Send Mail") {
 			const para = document.createElement("p");
-			var qq = document.createTextNode("Invitation email to your supplier");
+			para.innerHTML = "Invitation email to <br> your " + user;
 			para.classList.add("help-box", "small", "text-muted" ,"hidden-xs")
-			para.appendChild(qq);   
-			para.style.cssText = 'text-align: center;padding-left: 103px;font-weight: BOLD;padding-top: 5px;' 
+			para.style.cssText = 'text-align: center;font-weight: BOLD;' 
 			document.querySelector(wrapper_class).appendChild(para);
 		}
 	}
@@ -92,30 +115,54 @@ export default class WebForm extends frappe.ui.FieldGroup {
 			this.save()
 		);
 	}
-
 	setup_cancel_button() {
 		this.add_button_to_header("Cancel", "light", () => this.cancel());
 	}
 	setup_later_button() {
-		this.get_send_mail_details();
+		this.get_user_details();
 	}
-	get_send_mail_details () {
-		if (this.doc.email) {
+	make_enable_disable_user (email,action) {
+		frappe.call({
+			type: "POST",
+			method: "frappe.core.doctype.user.user.make_enable_disable_user",
+			args: {
+				email: email,
+				action:action
+			},
+			callback: response => {
+				if (!response.exc) {
+					if (response.message == 'Success') {
+						this.handle_success(this.doc) 
+					}
+				}
+			}
+		});
+	}
+	get_user_details () {
+		var email = this.doc.email || this.doc.email_address
+		if (email) {
 			frappe.call({
 				type: "POST",
-				method: "frappe.core.doctype.user.user.get_send_mail_details",
+				method: "frappe.core.doctype.user.user.get_user_details",
 				args: {
-					email: this.doc.email,
+					email: email,
 				},
 				callback: response => {
-					this.add_button_to_footer("Send Mail Later", "primary", () => this.send_mail());
-					this.button.setAttribute("style", "background-color: red;");
+					this.add_button_to_footer("Send Mail", "primary", () => this.send_mail());
+					this.button.style.backgroundColor = "red";
 					if (!response.exc) {
-						if (!response.message) {
+						if (response.message && !response.message.send_welcome_email) {
 							this.button.style.backgroundColor = "red";
 						}
 						else {
 							this.button.style.backgroundColor = "#3b3dbf";
+						}
+						if(response.message && response.message.enabled) {
+							if(this.doc.doctype == "Customer") this.add_button_to_footer("Disconnect", "primary", () => this.make_enable_disable_user(email,"Disconnect"));
+							this.button.style.cssText = 'float: right;margin-top: -42px;margin-right: -15px;'		
+						}
+						else {
+							if(this.doc.doctype == "Customer")this.add_button_to_footer("Connect", "primary", () => this.make_enable_disable_user(email,"Connect"));
 						}
 					}
 				}
