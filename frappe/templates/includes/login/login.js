@@ -244,7 +244,7 @@ login.login_handlers = (function() {
 				}
 			} else if(window.location.hash === '#signup'){
 				if(data.message=='Success') {
-					window.location = window.location.host + '/api/method/frappe.www.sign_up.verification';
+					window.location = '/api/method/frappe.www.sign_up.verification';
 				}
 			}
 
