@@ -13,6 +13,8 @@ from frappe.utils import validate_email_address
 from frappe.utils.verified_command import get_signed_params, \
     verify_request
 from frappe.website.utils import is_signup_enabled
+from dotenv import load_dotenv
+import os
 
 
 @frappe.whitelist(allow_guest=True)
@@ -139,17 +141,16 @@ def send_verification_mail_(user_):
 		full_name = "Administrator"
 
 	host_name = frappe.local.site
-	url = frappe.utils.get_url('/api/method/frappe.www.sign_up.confirm_verification'
-	                         ) + '?' \
+	load_dotenv()
+	url = '/api/method/frappe.www.sign_up.confirm_verification' + '?' \
 	    + get_signed_params({'email': user_.email, 'name': user_.name,
 	                        'host_name': host_name})
-
 	frappe.sendmail(recipients=user_.email,
 	                subject=_('Email Verification'),
 	                template='email_verification', delayed=False,args={
 	    'first_name': user_.first_name or user_.last_name or "user",
 	    'user': user_.name,
-	    'site_url': get_url(),
+	    'site_url': os.getenv("DOMAIN"),
 	    'user_fullname': full_name,
 	    'link': url,
 	    }, header=[_('Email Verification'), 'green'])
