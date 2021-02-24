@@ -66,3 +66,4 @@ Werkzeug==0.16.1
 wkhtmltopdf==0.2
 xlrd==1.2.0
 zxcvbn-python==4.4.24
+python-dotenv==0.15.0
