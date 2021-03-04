@@ -159,10 +159,11 @@ export default class WebForm extends frappe.ui.FieldGroup {
 						}
 						if(response.message && response.message.enabled) {
 							if(this.doc.doctype == "Customer") this.add_button_to_footer("Disconnect", "primary", () => this.make_enable_disable_user(email,"Disconnect"));
-							this.button.style.cssText = 'float: right;margin-top: -42px;margin-right: -15px;'		
+							this.button.style.cssText = 'float: right;margin-top: 15px;;margin-right: 330px;'		
 						}
 						else {
 							if(this.doc.doctype == "Customer")this.add_button_to_footer("Connect", "primary", () => this.make_enable_disable_user(email,"Connect"));
+							this.button.style.cssText = 'float: right;margin-top: 15px;margin-right: 330px;'
 						}
 					}
 				}
