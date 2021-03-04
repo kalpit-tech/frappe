@@ -1,0 +1,37 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Auto Deployment of Frappe Codebase Changes on Running Container
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+
+# Allows you to run this workflow manually from the Actions tab
+#   workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+     name: Deployment Started on Server
+     runs-on: ubuntu-latest
+     steps:
+     - name: executing remote ssh commands using secrets
+       uses: appleboy/ssh-action@master
+       with:
+         host: ${{ secrets.UAT_HOST }}
+         username: ${{ secrets.UAT_USERNAME }}
+         key: ${{ secrets.UAT_MODHERO_PEM }}
+         port: 22
+         script: |
+           cd webapps/uat.modehero.com/;
+           docker-compose exec -T modehero git -C ./apps/frappe pull --rebase upstream $(git rev-parse --abbrev-ref HEAD);
+           docker-compose exec -T modehero find ./apps/frappe -name "*.pyc" -delete;
+           docker-compose exec -T modehero ./env/bin/pip install -e ./apps/frappe;
+           docker-compose exec -T modehero bench migrate;
+           docker-compose exec -T modehero bench build;
+           docker-compose exec -T modehero bench clear-cache;
+           docker-compose exec -T modehero bench clear-website-cache;
+           docker-compose exec -T modehero sudo service nginx reload;
