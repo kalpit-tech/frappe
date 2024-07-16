@@ -67,3 +67,4 @@ wkhtmltopdf==0.2
 xlrd==1.2.0
 zxcvbn-python==4.4.24
 python-dotenv==0.15.0
+setuptools>=70.0.0 # not directly required, pinned by Snyk to avoid a vulnerability
